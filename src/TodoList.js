@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import TodoItem from './TodoItem';
-import Test from './Test';
 import "./style.css";
 
 class TodoList extends Component {
@@ -17,6 +16,21 @@ class TodoList extends Component {
 		this.hadnleItemDelete = this.hadnleItemDelete.bind(this)
 	}
 
+	//在组建即将被挂在到页面的时刻自动执行
+	// componenWillMount() {}
+
+	//在组建被挂载到页面后继续执行
+	// componentDidMount() {}
+
+	//组建被更前前，自动执行， return true 更新， false 不更新
+	// shouldComponentUpdate() {}
+
+
+	componentWillUpdate() {}
+
+	// 
+	// componentDidiUpdate(){}
+
 	render() {
 		return (
 			<Fragment>
@@ -27,13 +41,13 @@ class TodoList extends Component {
 						className="input"
 						value={this.state.inputValue}
 						onChange={this.handleInputChange}
+						ref={(input) => {this.input = input} }
 					/>
 					<button onClick={this.handleBtnClick}>Submit</button>
 				</div>
-				<ul>
+				<ul ref={(ul) => this.ul = ul}>
 					{this.getTodoItem()}
 				</ul>
-				<Test content={this.state.inputValue}/>
 			</Fragment>
 			
 		)
@@ -52,8 +66,8 @@ class TodoList extends Component {
 						})	
 	}
 
-	handleInputChange(e) {
-		const value = e.target.value
+	handleInputChange() {
+		const value = this.input.value
 		this.setState(() =>({
 				inputValue: value
 		}))
@@ -63,7 +77,10 @@ class TodoList extends Component {
 		this.setState((prevState) => ({
 			list: [...prevState.list, prevState.inputValue],
 			inputValue: ""
-		}))
+		}), () => {
+			console.log(this.ul.querySelectorAll('div').length)
+		})
+
 	}
 
 	hadnleItemDelete(index) {
